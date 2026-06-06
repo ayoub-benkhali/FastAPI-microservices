@@ -1,4 +1,6 @@
+# Création des routes API (GET, POST, PUT, DELETE)
 from fastapi import APIRouter, Depends, HTTPException, status
+# Gestion des sessions avec la base de données SQLAlchemy
 from sqlalchemy.orm import Session
 from database import get_db
 from models import User
@@ -15,7 +17,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email déjà utilisé"
-        )
+                           )
     new_user = User(
         username=user.username,
         email=user.email,
@@ -25,6 +27,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)  #  refresh après commit
     return {"message": "Utilisateur créé"}
+
 
 @router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
@@ -36,8 +39,12 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
             detail="Email ou mot de passe incorrect",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    # Créer un token JWT avec l'email comme sujet (sub)
     token = create_access_token({"sub": db_user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+         "access_token": token, 
+         "token_type": "bearer"  # token type used by JWT 
+           }
 
 # GET : récupérer tous les utilisateurs
 @router.get("/users", response_model=list[UserResponse])

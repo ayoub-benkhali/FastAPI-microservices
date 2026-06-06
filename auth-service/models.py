@@ -1,4 +1,6 @@
+# Définition des colonnes et types des tables SQLAlchemy
 from sqlalchemy import Column, Integer, String
+# Classe de base utilisée pour créer les modèles SQLAlchem
 from database import Base
 
 class User(Base):

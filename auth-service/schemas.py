@@ -1,3 +1,4 @@
+# Validation des données reçues et retournées par l'API
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
