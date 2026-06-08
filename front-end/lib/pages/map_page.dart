@@ -95,44 +95,6 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  // ── 3. Chercher les points proches ──────────────────────────────
-  Future<void> _findNearby() async {
-    setState(() {
-      _loading = true;
-      _statusMessage = 'Recherche des points proches...';
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse('$apiBase/locations/nearby'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'latitude': 36.8065,
-          'longitude': 10.1815,
-          'radius_meters': 5000,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final List data = jsonDecode(response.body);
-        for (var item in data) {
-          final point = LatLng(
-            item['latitude'].toDouble(),
-            item['longitude'].toDouble(),
-          );
-          _markers.add(_buildMarker(point, Colors.orange));
-        }
-        setState(() {
-          _statusMessage = '🔍 ${data.length} point(s) trouvé(s) dans un rayon de 5km';
-        });
-      }
-    } catch (e) {
-      setState(() => _statusMessage = '❌ Erreur nearby : $e');
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
   // ── Utilitaire : créer un marqueur ──────────────────────────────
   Marker _buildMarker(LatLng point, Color color) {
     return Marker(
@@ -228,14 +190,6 @@ class _MapPageState extends State<MapPage> {
             ),
           ),
         ],
-      ),
-
-      // Bouton Nearby
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _findNearby,
-        icon: const Icon(Icons.radar),
-        label: const Text('Points proches (5km)'),
-        backgroundColor: Colors.orange,
       ),
     );
   }
