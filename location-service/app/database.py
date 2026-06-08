@@ -1,3 +1,5 @@
+# create_async_engine : crée le moteur SQLAlchemy asynchrone (connexion à PostgreSQL)
+# AsyncSession : session DB asynchrone (execute, commit, rollback)
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.config import settings
@@ -14,8 +16,8 @@ class Base(DeclarativeBase):
 async def get_db():
     async with AsyncSessionLocal() as session:
         try:
-            yield session
-            await session.commit()
+            yield session # donne la session à la route
+            await session.commit() # commit automatique si tout s'est bien passé
         except Exception:
-            await session.rollback()
+            await session.rollback() # annule tout en cas d'erreur
             raise

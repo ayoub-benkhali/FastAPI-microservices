@@ -1,8 +1,15 @@
+# Session asynchrone SQLAlchemy — permet d'exécuter des requêtes DB sans bloquer le thread.
 from sqlalchemy.ext.asyncio import AsyncSession
+# construit des requêtes SELECT de façon pythonique (ORM)
 from sqlalchemy import select, text
+# fonctions géospatiales de PostGIS pour manipuler les données géographiques :
+# ST_AsText : convertit une géométrie PostGIS en format WKT (Well-Known Text) pour faciliter l'extraction des coordonnées
+# ST_DWithin : vérifie si deux géométries sont à une distance donnée l'une de l'autre (utile pour la recherche de proximité)
+# ST_GeogFromText : convertit une chaîne WKT en type géographique utilisable par PostGIS
 from geoalchemy2.functions import ST_AsText, ST_DWithin, ST_GeogFromText
 from app.models.location import Location
 from app.schemas.location import LocationCreate, LocationResponse
+# pour lever une 404 si aucune localisation n'est trouvée pour un utilisateur donné
 from fastapi import HTTPException
 
 def _parse_point(wkt: str) -> tuple[float, float]:
@@ -15,10 +22,7 @@ class LocationService:
     @staticmethod
     async def save_location(db: AsyncSession, body: LocationCreate) -> LocationResponse:
         wkt_point = f"POINT({body.longitude} {body.latitude})"
-        loc = Location(
-            user_id=body.user_id,
-            geom=f"SRID=4326;{wkt_point}"
-        )
+        loc = Location( user_id = body.user_id, geom = f"SRID=4326;{wkt_point}" )
         db.add(loc)
         await db.flush()
 
@@ -31,7 +35,8 @@ class LocationService:
         )
 
     @staticmethod
-    async def get_user_locations(db: AsyncSession, user_id: int) -> list[LocationResponse]:
+    # récupère toutes les localisations d'un utilisateur, triées par date de création
+    async def get_user_locations(db: AsyncSession, user_id: int) -> list[LocationResponse]: 
         result = await db.execute(
             select(Location.id, Location.user_id, Location.created_at,
                    ST_AsText(Location.geom).label("geom_wkt"))

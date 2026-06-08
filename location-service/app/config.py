@@ -1,4 +1,4 @@
-
+# pydantic_settings : lit les variables d'environnement et les valide avec Pydantic
 from pydantic_settings import BaseSettings
 
 
@@ -9,4 +9,4 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-settings = Settings()
+settings = Settings() # instance unique importée partout dans l'app pour accéder aux configs (ex: settings.DATABASE_URL)

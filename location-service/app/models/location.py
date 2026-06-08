@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, DateTime, func
-from geoalchemy2 import Geography          # PostGIS
+# Geography : type PostGIS pour stocker des coordonnées géographiques (lon/lat)
+# SRID 4326 = système de coordonnées WGS84 (GPS standard)
+from geoalchemy2 import Geography          
 from app.database import Base
 
 class Location(Base):

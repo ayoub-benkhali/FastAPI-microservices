@@ -1,5 +1,8 @@
 from fastapi import FastAPI
+# CORSMiddleware : autorise les requêtes cross-origin (ex: Flutter Web sur un autre port)
 from fastapi.middleware.cors import CORSMiddleware
+# asynccontextmanager : transforme une fonction async en context manager
+# utilisé pour définir le cycle de vie (startup/shutdown) de l'app
 from contextlib import asynccontextmanager
 from app.database import engine, Base
 from app.routers import location

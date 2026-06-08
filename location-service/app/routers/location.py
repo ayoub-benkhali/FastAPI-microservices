@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends # Depends : injection de dépendances (get_db)
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.schemas.location import LocationCreate, LocationResponse, NearbyRequest
 from app.services.location_service import LocationService
 from typing import List
 
+
+# prefix="/locations" : toutes les routes commencent par /locations
+# tags=["Locations"]  : groupement dans la doc Swagger /docs
 router = APIRouter(prefix="/locations", tags=["Locations"])
 
 # Enregistrer une position
