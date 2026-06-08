@@ -1,0 +1,16 @@
+name: front_end
+description: Location App
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  http: ^1.2.0
+
+flutter:
+  uses-material-design: true
