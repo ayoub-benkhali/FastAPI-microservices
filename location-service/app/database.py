@@ -13,6 +13,7 @@ AsyncSessionLocal = sessionmaker( bind=engine, class_=AsyncSession, expire_on_co
 class Base(DeclarativeBase):
     pass
 
+# Dependency injection pour obtenir une session DB asynchrone dans les routes FastAPI
 async def get_db():
     async with AsyncSessionLocal() as session:
         try:

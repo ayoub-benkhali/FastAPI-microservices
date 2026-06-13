@@ -15,6 +15,7 @@ router = APIRouter(prefix="/locations", tags=["Locations"])
 
 # Enregistrer une position
 # response_model=LocationResponse : valide et sérialise la réponse
+# request body : LocationCreate (latitude, longitude, user_id) envoyé par le client
 @router.post("/", response_model=LocationResponse, status_code=201)
 async def save_location(body: LocationCreate, db: AsyncSession = Depends(get_db)):
     # db : session de base de données injectée automatiquement par Depends(get_db)
